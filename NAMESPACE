@@ -1,0 +1,11 @@
+useDynLib(binom)
+
+export(binom.asymp, binom.agresti.coull,
+       binom.exact, binom.wilson,
+       binom.prop.test, binom.bayes,
+       binom.cloglog, binom.probit,
+       binom.profile, binom.confint,
+       binom.coverage, binom.lrt,
+       binom.logit, cloglog.sample.size,
+       binom.power, binom.sim, tkbinom.power,
+       binom.length, binom.optim, binom.plot)
