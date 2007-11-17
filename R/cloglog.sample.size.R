@@ -17,7 +17,7 @@ cloglog.sample.size <- function(p.alt, n = NULL, p = 0.5,
     power
   }
   if(is.null(version$language))
-    assign("compute.power", compute.power, frame = 1)
+    assign("compute.power", compute.power)
   compute.delta <- function(Zalpha, Zpower, p, n, alternative, phi, ...) {
     find.delta <- function(delta, Zalpha, power, p, n, alternative, phi)
       compute.power(Zalpha, p, p + delta, n, delta, alternative, phi) - power

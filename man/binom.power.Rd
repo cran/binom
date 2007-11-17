@@ -31,7 +31,6 @@ binom.power(p.alt, n = 100, p = 0.5, alpha = 0.05, phi = 1,
 
 \seealso{\code{\link{binom.confint}}, \code{\link{binom.bayes}},
   \code{\link{binom.logit}}, \code{\link{binom.probit}}, \code{\link{binom.coverage}}}
-}
 \examples{
 binom.power(0.95, alternative = "greater")
 }

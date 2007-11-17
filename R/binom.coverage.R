@@ -13,7 +13,6 @@ binom.coverage <- function(p, n, conf.level = 0.95, method = "all", ...) {
   z <- merge(ci, data.frame(p = p))
   z$coverage <- with(z, (p >= lower & p <= upper) * dbinom(x, n, p))
   z <- aggregate(z["coverage"], z[c("method", "p", "n")], sum)
-  z[c("p", "n")] <- lapply(z[c("p", "n")], function(x) as.numeric(levels(x)[x]))
   z <- z[order(z$method, z$p), ]
   row.names(z) <- seq(NROW(z))
   z

@@ -54,7 +54,6 @@ within the estimated confidence limits.
   \code{\link{binom.logit}}, \code{\link{binom.probit}}, \code{\link{binom.coverage}},
 \code{\link[MASS]{confint}} in package MASS,
 \code{\link[stats]{family}}, \code{\link[stats]{glm}}}
-}
 \examples{
 binom.lrt(x = 0:10, n = 10)
 }

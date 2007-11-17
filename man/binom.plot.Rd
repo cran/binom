@@ -52,7 +52,6 @@ binom.plot(n, method = binom.lrt, np = 500,
 
 \seealso{\code{\link{binom.confint}}, \code{\link{binom.optim}},
   \code{\link[lattice]{xyplot}}, \code{\link[lattice]{levelplot}}}
-}
 \examples{
 binom.plot(5, type = "levelplot")
 binom.plot(c(3, 5, 10, 25), type = "xyplot")

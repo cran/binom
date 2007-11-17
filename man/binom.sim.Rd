@@ -29,7 +29,6 @@ binom.sim(M = 200, n = 100, p = 0.5, conf.level = 0.95, methods = "all",  ...)
 
 \seealso{\code{\link{binom.confint}}, \code{\link{binom.bayes}},
   \code{\link{binom.logit}}, \code{\link{binom.probit}}, \code{\link{binom.coverage}}}
-}
 \examples{
 %binom.sim(p = 0.95, method = "lrt")
 }

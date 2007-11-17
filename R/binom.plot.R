@@ -92,9 +92,8 @@ binom.plot <- function(n, method = binom.lrt, np = 500,
     z <- merge(ci, data.frame(p = p))
     z$coverage <- with(z, E.pn(x, n, p, lower, upper))
     z <- aggregate(z["coverage"], z[c("p", "n")], sum)
-    z$p <- as.numeric(levels(z$p)[z$p])
     args$x <- coverage ~ p | n
-    z$n <- args$n <- as.numeric(levels(z$n)[z$n])
+    args$n <- z$n
     z$n <- factor(z$n, labels = sprintf("n = %d", sort(unique(z$n))))
     args$breaks <- ci[c("n", "lower", "upper")]
     if(is.null(args$panel))

@@ -22,7 +22,6 @@
 
 \seealso{\code{\link{binom.power}}, \code{\link{binom.confint}}, \code{\link{binom.bayes}},
   \code{\link{binom.logit}}, \code{\link{binom.probit}}, \code{\link{binom.coverage}}}
-}
 \examples{
 binom.power(0.95, alternative = "greater")
 }

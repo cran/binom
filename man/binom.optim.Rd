@@ -66,7 +66,6 @@ the case for all methods provided in this package except
 
 \seealso{\code{\link{binom.confint}}, \code{\link{binom.plot}},
   \code{\link{binom.coverage}}, \code{\link[stats]{optim}}}
-}
 \examples{
 binom.optim(10, k = 1) ## determine optimal significance for x = 0, 10 only
 binom.optim(3, method = binom.wilson) ## determine optimal significance for all x

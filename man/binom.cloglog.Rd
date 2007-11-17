@@ -29,7 +29,6 @@ binom.cloglog(x, n, conf.level = 0.95, ...)
 
 \seealso{\code{\link{binom.confint}}, \code{\link{binom.bayes}},
   \code{\link{binom.logit}}, \code{\link{binom.probit}}, \code{\link{binom.coverage}}}
-}
 \examples{
 binom.cloglog(x = 0:10, n = 10)
 }
