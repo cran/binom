@@ -3,9 +3,9 @@ binom.bayes <- function(x, n, conf.level = 0.95, type = c("highest", "central"),
                         tol = .Machine$double.eps^.5, maxit = 1000, ...) {
   if(prior.shape1 <= 0 || prior.shape2 <= 0)
     stop("priors must be strictly positive.")
-  if((length(x) != length(n)) && length(x) == 1) 
+  if((length(x) != length(n)) && length(x) == 1)
     x <- rep(x, length(n))
-  if((length(x) != length(n)) && length(n) == 1) 
+  if((length(x) != length(n)) && length(n) == 1)
     n <- rep(n, length(x))
   ends <- x == 0 | x == n
   alpha <- rep(1 - conf.level, length(x))
@@ -16,7 +16,7 @@ binom.bayes <- function(x, n, conf.level = 0.95, type = c("highest", "central"),
   lcl <- qbeta(alpha, a, b)
   ucl <- qbeta(1 - alpha, a, b)
   hpd <- any(pmatch(type, "highest", nomatch = FALSE))
-  error <- vector("integer", length(lcl))
+  error <- vector("logical", length(lcl))
   if(any(!ends) && hpd) {
     ci <- .C("binom_bayes",
              as.integer(x[!ends]),
@@ -31,8 +31,9 @@ binom.bayes <- function(x, n, conf.level = 0.95, type = c("highest", "central"),
              tol = as.double(tol),
              error = error[!ends],
              PACKAGE = "binom")
-    lcl[!ends] <- ci[["lcl"]]
-    ucl[!ends] <- ci[["ucl"]]
+    lcl[!ends] <- ci$lcl
+    ucl[!ends] <- ci$ucl
+    error[!ends] <- as.logical(ci$error)
     if(any(ci$error)) {
       nerr <- sum(ci$error)
       msg1 <- sprintf("%s confidence interval%s ", nerr, if(nerr > 1) "s" else "")
@@ -46,7 +47,7 @@ binom.bayes <- function(x, n, conf.level = 0.95, type = c("highest", "central"),
   sig <- pbeta(lcl, a, b) + 1 - pbeta(ucl, a, b)
   res <- data.frame(method = "bayes", x = x, n = n, shape1 = a, shape2 = b,
                     mean = p, lower = lcl, upper = ucl, sig = sig)
-  if(any(ci$error))
+  if(any(error))
     res$method <- factor(sprintf("bayes%s", ifelse(ci$error, "*", "")))
   attr(res, "conf.level") <- conf.level
   res

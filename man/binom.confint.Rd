@@ -24,14 +24,17 @@ binom.confint(x, n, conf.level = 0.95, methods = "all", ...)
   \item{\dots}{Additional arguments to be passed to \code{binom.bayes}.}
 }
 \details{
-Nine methods are allowed for constructing the confidence interval(s): 
+Nine methods are allowed for constructing the confidence interval(s):
 
 \itemize{
-\item{\code{exact}}{ - Pearson-Klopper method.}
-\item{\code{asymptotic}}{ - the text-book definition for confidence limits on a single proportion using the Central Limit Theorem.}
+\item{\code{exact}}{ - Pearson-Klopper method. See also
+  \code{\link{binom.test}}.}
+\item{\code{asymptotic}}{ - the text-book definition for confidence
+  limits on a single proportion using the Central Limit Theorem.}
 \item{\code{agresti-coull}}{ - Agresti-Coull method.}
 \item{\code{wilson}}{ - Wilson method.}
-\item{\code{prop.test}}{ - equivalent to \code{prop.test(x = x, n = n, conf.level = conf.level)$conf.int}.}
+\item{\code{prop.test}}{ - equivalent to \code{prop.test(x = x, n = n,
+    conf.level = conf.level)$conf.int}.}
 \item{\code{bayes}}{ - see \code{\link{binom.bayes}}.}
 \item{\code{logit}}{ - see \code{\link{binom.logit}}.}
 \item{\code{cloglog}}{ - see \code{\link{binom.cloglog}}.}
@@ -67,8 +70,11 @@ separately. Specifically, the lower bound is replaced by
 }
 \author{Sundar Dorai-Raj (sdorairaj@gmail.com) }
 
-\seealso{\code{\link{binom.bayes}}, \code{\link{binom.logit}}, \code{\link{binom.probit}},
-  \code{\link{binom.cloglog}}, \code{\link{binom.coverage}}, \code{\link[stats]{prop.test}}}
+\seealso{\code{\link{binom.bayes}}, \code{\link{binom.logit}},
+  \code{\link{binom.probit}}, \code{\link{binom.cloglog}},
+  \code{\link{binom.coverage}}, \code{\link[stats]{prop.test}},
+  \code{\link[stats]{binom.test}} for comparison to method
+  \code{"exact"}}
 \examples{
 binom.confint(x = c(2, 4), n = 100, tol = 1e-8)
 }
