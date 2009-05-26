@@ -49,7 +49,6 @@ the case for all methods provided in this package except
 \value{
   A \code{list} with the following elements:
 
-  \itemize{
     \item{par}{Final confidence levels. The length of this vector is
       \code{k}.}
     \item{value}{The final minimized value from \code{\link{optim}}.}
@@ -60,7 +59,6 @@ the case for all methods provided in this package except
       optimizer.}
     \item{confint}{A \code{data.frame} returned from a call to
       \code{method} using the optimized confidence levels.}
-  }
 }
 \author{Sundar Dorai-Raj (sdorairaj@gmail.com) }
 
