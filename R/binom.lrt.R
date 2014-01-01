@@ -1,6 +1,5 @@
 binom.lrt <- function(x, n, conf.level = 0.95, bayes = FALSE, conf.adj = FALSE, plot = FALSE, ...) {
-  do.plot <- (is.logical(plot) && plot) || is.list(plot)
-  if(do.plot) require(lattice, TRUE)
+  do.plot <- ((is.logical(plot) && plot) || is.list(plot)) && require(lattice)
   xn <- cbind(x = x, n = n)
   ok <- !is.na(xn[, 1]) & !is.na(xn[, 2])
   x <- xn[ok, "x"]
@@ -14,8 +13,8 @@ binom.lrt <- function(x, n, conf.level = 0.95, bayes = FALSE, conf.adj = FALSE, 
   args <- list(...)
   tol <- if(is.null(args$tol)) .Machine$double.eps^0.5 else args$tol
   bindev <- function(y, x, mu, wt, bound = 0, tol = .Machine$double.eps^0.5, ...) {
-    ll.y <- ifelse(y %in% c(0, 1), 0, binom:::ldbinom(x, wt, y))
-    ll.mu <- ifelse(mu %in% c(0, 1), 0, binom:::ldbinom(x, wt, mu))
+    ll.y <- ifelse(y %in% c(0, 1), 0, ldbinom(x, wt, y))
+    ll.mu <- ifelse(mu %in% c(0, 1), 0, ldbinom(x, wt, mu))
     f <- ifelse(abs(y - mu) < tol, 0, sign(y - mu) * sqrt(-2 * (ll.y - ll.mu)))
     f - bound
   }
@@ -100,11 +99,6 @@ binom.lrt <- function(x, n, conf.level = 0.95, bayes = FALSE, conf.adj = FALSE, 
     plot.args$alpha <- unique(alpha)
     if(is.null(plot.args$panel))
       plot.args$panel <- panel.binom.lrt
-#    if(is.null(plot.args$scales)) {
-#      plot.args$scales <- list(x = list(relation = "free"))
-#    } else if(is.null(args$plot.args$scales$x)) {
-#      plot.args$scales$x <- list(relation = "free")
-#    }
     if(is.null(plot.args$xlab))
       plot.args$xlab <- "Probability of Success (p)"
     if(is.null(plot.args$ylab))
@@ -150,83 +144,8 @@ panel.binom.lrt <- function(x, y, subscripts, lower, upper, mean, alpha, ...) {
     q <- qnorm(1 - alpha/2)
     llines(c(xlim[1], upper), c(q, q), lty = 2, col = "darkgray", lwd = 2)
     llines(c(upper, upper), c(ylim[1], q), lty = 2, col = "darkgray", lwd = 2)
-    ##lab <- substitute(hat(p)[U] == phat, list(phat = sprintf("%0.4f", upper)))
     lab <- sprintf("UCL = %0.4f", upper)
     ltext(xlim[1] + adj.x, q + adj.y, lab, adj = 0, col = "black")
     lpoints(upper, q, col = "darkred", pch = 16, cex = 1.2)
   }
 }
-
-
-#binom.loglik <- function(x, n, conf.level = 0.95, bayes = TRUE, conf.adj = FALSE, edge.adj = TRUE, ...) {
-#  if(length(x) > 1 || length(n) > 1)
-#    stop("binom.loglik is not vectorised")
-#  ok <- !is.na(x) & !is.na(n) & x >=0 & x <= n & n > 0
-#  if(!ok) return(c(lower = NA, upper = NA))
-#  p <- x/n
-#  alpha <- 1 - conf.level
-#  lower <- 0
-#  upper <- 1
-#  args <- list(...)
-#  tol <- if(is.null(args$tol)) .Machine$double.eps else args$tol
-#  args$f <- function(y, mu, w, bound) {
-##    x <- p * n
-##    lr0 <- ifelse(x == 0, 0, log(p0/p))
-##    lr1 <- ifelse(x == n, 0, log((1 - p0)/(1 - p)))
-##    lr <- -2 * (x * lr0 + (n - x) * lr1)
-##    sign(p0 - p) * sqrt(lr) - bound
-#    devy <- y
-#    nz <- y != 0
-#    devy[nz] <- y[nz] * log(y[nz])
-#    nz <- (1 - y) != 0
-#    devy[nz] <- devy[nz] + (1 - y[nz]) * log(1 - y[nz])
-#    devmu <- y * log(mu) + (1 - y) * log(1 - mu)
-#    if(any(small <- mu * (1 - mu) < .Machine$double.eps)) {
-#      smu <- mu[small]
-#      sy <- y[small]
-#      smu <- ifelse(smu < .Machine$double.eps, .Machine$double.eps, smu)
-#      onemsmu <- ifelse((1 - smu) < .Machine$double.eps, .Machine$double.eps, 1 - smu)
-#      devmu[small] <- sy * log(smu) + (1 - sy) * log(onemsmu)
-#    }
-#    devi <- 2 * (devy - devmu)
-#    sign(y - mu) * sqrt(sum(w * devi)) - bound
-#  }
-#  x0 <- x < 1
-#  xn <- x > n - 1
-#  z <- qnorm(1 - alpha * if((x0 || xn) && conf.adj) 1 else 0.5)
-#  if((is.logical(bayes) && bayes) || is.numeric(bayes)) {
-#    if(is.logical(bayes)) {
-#      bayes <- c(0.5, 0.5)
-#    } else if(length(bayes) == 1) {
-#      bayes <- c(bayes, bayes)
-#    }
-#    if(x0 || xn) {
-#      n <- n + bayes[1] + bayes[2]
-#      x <- x + bayes[1]
-#    }
-#    p <- x/n
-#    bayes <- TRUE
-#  }
-#  if((x0 || xn) && !bayes) {
-#    if(xn) {
-#      lower <- (alpha/2)^(1/n)
-#    } else {
-#      upper <- 1 - (alpha/2)^(1/n)
-#    }
-#  } else {
-#    args[c("mu", "w")] <- list(mu = p, w = n)
-#    if(tol > p || p > 1 - tol)
-#      warning("estimated p is less than tolerance for uniroot")
-#    if((!x0 || edge.adj) && tol < p) {
-#      args$interval <- c(tol, p)
-#      args$bound <- -z
-#      lower <- if(args$f(tol, p, n, -z) > 0) 0 else do.call("uniroot", args)$root
-#    }
-#    if((!xn || edge.adj) && p < 1 - tol) {
-#      args$interval <- c(p, 1 - tol)
-#      args$bound <- z
-#      upper <- if(args$f(1 - tol, p, n, z) < 0) 1 else do.call("uniroot", args)$root
-#    }
-#  }
-#  c(lower = lower, upper = upper)
-#}

@@ -5,14 +5,12 @@
 \alias{binom.exact}
 \alias{binom.prop.test}
 \alias{binom.wilson}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Binomial confidence intervals}
 \description{
 Uses eight different methods to obtain a confidence interval on the binomial probability. }
 \usage{
 binom.confint(x, n, conf.level = 0.95, methods = "all", ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{Vector of number of successes in the binomial experiment.}
   \item{n}{Vector of number of independent trials in the binomial experiment.}
@@ -31,7 +29,12 @@ Nine methods are allowed for constructing the confidence interval(s):
   \code{\link{binom.test}}.}
 \item{\code{asymptotic}}{ - the text-book definition for confidence
   limits on a single proportion using the Central Limit Theorem.}
-\item{\code{agresti-coull}}{ - Agresti-Coull method.}
+\item{\code{agresti-coull}}{ - Agresti-Coull method. For a 95\% confidence
+  interval, this method does not use the concept   of "adding 2
+  successes and 2 failures," but rather uses the formulas explicitly
+  described in the following link:
+  http://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval#Agresti-Coull_Interval.
+}
 \item{\code{wilson}}{ - Wilson method.}
 \item{\code{prop.test}}{ - equivalent to \code{prop.test(x = x, n = n,
     conf.level = conf.level)$conf.int}.}

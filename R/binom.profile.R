@@ -1,6 +1,10 @@
-binom.profile <- function(x, n, conf.level = 0.95, maxsteps = 50,
-                          del = zmax/5, bayes = TRUE, plot = FALSE, ...) {
-  if(plot) require(lattice)
+binom.profile <- function(x, n,
+                          conf.level = 0.95,
+                          maxsteps = 50,
+                          del = zmax / 5,
+                          bayes = TRUE,
+                          plot = FALSE, ...) {
+  do.plot <- (plot && require(lattice))
   xn <- cbind(x = x, n = n)
   ok <- !is.na(xn[, 1]) & !is.na(xn[, 2])
   x <- xn[ok, "x"]
@@ -27,7 +31,7 @@ binom.profile <- function(x, n, conf.level = 0.95, maxsteps = 50,
     x0 <- xn <- rep(FALSE, NROW(x))
   }
   adj <- pmin(2/log(n), adj)
-  if(plot) prof <- vector("list", NROW(x))
+  if(do.plot) prof <- vector("list", NROW(x))
   for(i in seq(NROW(x))) {
     if(x[i] == n[i] || x[i] == 0) {
       ## should never happen if bayes == TRUE
@@ -66,7 +70,7 @@ binom.profile <- function(x, n, conf.level = 0.95, maxsteps = 50,
       if(x0[i]) q <- q[-1]
       if(xn[i]) q <- q[-2]
       ci <- approx(s$y, s$x, q)$y
-      if(plot) {
+      if(do.plot) {
         prof[[i]] <- data.frame(mu = mu, z = z)
         .x <- if(x0[i] || xn[i]) x[i] - 0.5 else x[i]
         .n <- if(x0[i] || xn[i]) n[i] - 1.0 else n[i]
@@ -75,11 +79,11 @@ binom.profile <- function(x, n, conf.level = 0.95, maxsteps = 50,
     }
     if(x0[i]) ci <- c(0, ci)
     if(xn[i]) ci <- c(ci, 1)
-    if(plot) prof[[i]] <- cbind(prof[[i]], lcl = ci[1], ucl = ci[2])
+    if(do.plot) prof[[i]] <- cbind(prof[[i]], lcl = ci[1], ucl = ci[2])
     res[i, 4:5] <- ci
   }
   attr(res, "conf.level") <- conf.level
-  if(plot) {
+  if(do.plot) {
     attr(res, "profile") <- prof <- do.call("rbind", prof)
     xn <- paste("x = ", prof$x, "; n = ", prof$n, sep = "")
     xn <- ordered(xn, unique(xn))

@@ -1,3 +1,6 @@
+binom.methods <- c("wilson", "agresti-coull", "ac", "exact", "prop.test", "profile", "lrt",
+                   "asymptotic", "bayes", "cloglog", "logit", "probit", "all")
+
 binom.confint <- function(x, n, conf.level = 0.95, methods = "all", ...) {
   if((length(x) != length(n))) {
     m <- cbind(x = x, n = n)
@@ -5,8 +8,6 @@ binom.confint <- function(x, n, conf.level = 0.95, methods = "all", ...) {
     n <- m[, "n"]
   }
   res <- NULL
-  binom.methods <- c("wilson", "agresti-coull", "ac", "exact", "prop.test", "profile", "lrt",
-                     "asymptotic", "bayes", "cloglog", "logit", "probit", "all")
   method <- pmatch(methods, binom.methods)
   if(all(is.na(method))) {
     methods <- paste(paste("\"", methods, "\"", sep = ""), collapse = ", ")
@@ -40,7 +41,7 @@ binom.confint <- function(x, n, conf.level = 0.95, methods = "all", ...) {
     ucl <- .p + z * sqrt(.p * (1 - .p)/.n)
     res.ac <- data.frame(method = rep("agresti-coull", NROW(x)),
                          xn, mean = p, lower = lcl, upper = ucl)
-    res <- res.ac    
+    res <- res.ac
   }
   if(any(method == "asymptotic") || all.methods) {
     se <- sqrt(p * (1 - p)/n)
@@ -137,13 +138,9 @@ binom.confint <- function(x, n, conf.level = 0.95, methods = "all", ...) {
     res <- if(is.null(res)) res.lrt else rbind(res, res.lrt)
   }
   if(any(method == "prop.test") || all.methods) {
-    num1.upper <- 2 * x + z2 + 1
-    num1.lower <- 2 * x + z2 - 1
-    num2.upper <- z * sqrt(z2 + (2 - 1/n) + 4 * p * (n * (1 - p) - 1))
-    num2.lower <- z * sqrt(z2 - (2 + 1/n) + 4 * p * (n * (1 - p) + 1))
-    denom <- 2 * (n + z2)
-    lcl <- pmax((num1.lower - num2.lower)/denom, 0.0)
-    ucl <- pmin((num1.upper + num2.upper)/denom, 1.0)
+    ci <- lapply(seq_along(x), function(i) stats::prop.test(x[i], n[i])$conf.int)
+    lcl <- sapply(ci, "[", 1)
+    ucl <- sapply(ci, "[", 2)
     res.prop.test <- data.frame(method = rep("prop.test", NROW(x)),
                                 xn, mean = p, lower = lcl, upper = ucl)
     res <- if(is.null(res)) res.prop.test else rbind(res, res.prop.test)
@@ -154,10 +151,10 @@ binom.confint <- function(x, n, conf.level = 0.95, methods = "all", ...) {
     p3 <- 1 + z2/n
     lcl <- (p1 - p2)/p3
     ucl <- (p1 + p2)/p3
-    x1 <- x == 1
-    x2 <- x == n - 1
-    if(any(x1)) lcl[x1] <- -log(1 - alpha[x1])/n[x1]
-    if(any(x2)) ucl[x2] <- 1 + log(1 - alpha[x2])/n[x2]
+    # x1 <- x == 1
+    # x2 <- x == n - 1
+    # if(any(x1)) lcl[x1] <- -log(1 - alpha[x1])/n[x1]
+    # if(any(x2)) ucl[x2] <- 1 + log(1 - alpha[x2])/n[x2]
     res.wilson <- cbind(method = rep("wilson", NROW(x)),
                         xn, mean = p, lower = lcl, upper = ucl)
     res <- if(is.null(res)) res.wilson else rbind(res, res.wilson)

@@ -1,17 +1,3 @@
-#lpolygon <- function (x, y = NULL, border = NULL, col = NULL, ...) {
-#  require(grid, TRUE)
-#  xy <- xy.coords(x, y)
-#  x <- xy$x
-#  y <- xy$y
-#  gp <- list(...)
-#  if (!is.null(border)) 
-#    gp$col <- border
-#  if (!is.null(col)) 
-#    gp$fill <- col
-#  gp <- do.call("gpar", gp)
-#  grid.polygon(x, y, gp = gp, default.units = "native")
-#}
-
 panel.binom.plot.levelplot <- function(x, y, z, subscripts, breaks = NULL, ...) {
   panel.levelplot(x, y, z, subscripts, ...)
   if(!is.null(breaks)) {
@@ -55,11 +41,14 @@ panel.binom.plot.xyplot <-  function(x, y, subscripts, conf.level, n, breaks, ac
   panel.xyplot(xx, yy, type = "l", lty = 4, lwd = 2, col = "#888888")
 }
 
-binom.plot <- function(n, method = binom.lrt, np = 500,
-                       conf.level = 0.95, actual = conf.level,
+binom.plot <- function(n,
+                       method = binom.lrt,
+                       np = 500,
+                       conf.level = 0.95,
+                       actual = conf.level,
                        type = c("xyplot", "levelplot"),
                        tol = .Machine$double.eps^0.5, ...) {
-  require(lattice)
+  stopifnot(require(lattice))
   type <- match.arg(type)
   if(length(n) != 1) {
     if(length(n) > 1 && type == "levelplot") {

@@ -1,6 +1,16 @@
-binom.power <- function(p.alt, n = 100, p = 0.5, alpha = 0.05, phi = 1,
+binom.power <- function(p.alt,
+                        n = 100,
+                        p = 0.5,
+                        alpha = 0.05,
+                        phi = 1,
                         alternative = c("two.sided", "greater", "less"),
                         method = c("cloglog", "logit", "probit", "asymp", "lrt", "exact")) {
+  args <- cbind(p.alt, n, p, alpha, phi)
+  p.alt <- args[, "p.alt"]
+  n <- args[, "n"]
+  p <- args[, "p"]
+  alpha <- args[, "alpha"]
+  phi <- args[, "phi"]
   method <- match.arg(method)
   alternative <- match.arg(alternative)
   if(method %in% c("cloglog", "logit", "probit")) {
@@ -25,10 +35,15 @@ binom.power <- function(p.alt, n = 100, p = 0.5, alpha = 0.05, phi = 1,
     sd1 <- sqrt(phi * varfun(p.alt, n))
     pz0 <- pnorm((gamma1 - gamma0 - z * sd0)/sd1) # decrease in p
     pz1 <- pnorm((gamma0 - gamma1 - z * sd0)/sd1) # increase in p
-    power <- switch(alternative,
-                    less      = ifelse(p == p.alt, alpha, if(cloglog) pz0 else pz1),
-                    greater   = ifelse(p == p.alt, alpha, if(cloglog) pz1 else pz0),
-                    two.sided = ifelse(p == p.alt, alpha, pz0 + pz1))
+    power <- rep(alpha, length.out = nrow(args))
+    p.diff <- p != p.alt
+    power[p.diff] <- if (alternative == "less") {
+      (if(cloglog) pz0 else pz1)[p.diff]
+    } else if (alternative == "greater") {
+      (if(cloglog) pz1 else pz0)[p.diff]
+    } else {
+      (pz0 + pz1)[p.diff]
+    }
   } else if(method %in% c("lrt", "exact")) {
     alpha <- if(alternative == "two.sided") alpha else 2 * alpha
     pci <- binom.confint(n * p, n, 1 - alpha, method)[c("lower", "upper")]
@@ -50,8 +65,8 @@ binom.power <- function(p.alt, n = 100, p = 0.5, alpha = 0.05, phi = 1,
 }
 
 tkbinom.power2 <- function() {
-  require(tcltk) || stop("tcltk support is absent")
-  require(lattice)
+  stopifnot(require(tcltk))
+  stopifnot(require(lattice))
   trellis.par.set(theme = col.whitebg())
   local({
     tk.p <- tclVar(0.5)
@@ -144,8 +159,8 @@ tkbinom.power2 <- function() {
 }
 
 tkbinom.power <- function() {
-  require(tcltk) || stop("tcltk support is absent")
-  require(lattice)
+  stopifnot(require(tcltk))
+  stopifnot(require(lattice))
   trellis.par.set(theme = col.whitebg())
   local({
     tk.p <- tclVar(0.5)

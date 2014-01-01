@@ -1,14 +1,12 @@
 \name{binom.sim}
 \alias{binom.sim}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{Simulates confidence intervals for binomial data}
 \description{
   Simulates binomial data for testing confidence interval coverage.
 }
 \usage{
-binom.sim(M = 200, n = 100, p = 0.5, conf.level = 0.95, methods = "all",  ...) 
+binom.sim(M = 200, n = 100, p = 0.5, conf.level = 0.95, methods = "all",  ...)
 }
-%- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{M}{Number of simulations to create.}
   \item{n}{Vector of number of independent trials in the binomial experiment.}
@@ -30,8 +28,8 @@ binom.sim(M = 200, n = 100, p = 0.5, conf.level = 0.95, methods = "all",  ...)
 \seealso{\code{\link{binom.confint}}, \code{\link{binom.bayes}},
   \code{\link{binom.logit}}, \code{\link{binom.probit}}, \code{\link{binom.coverage}}}
 \examples{
-%binom.sim(p = 0.95, method = "lrt")
+binom.sim(p = 0.95, method = "lrt")
 }
-\keyword{univar}% at least one, from doc/KEYWORDS
-\keyword{htest}% __ONLY ONE__ keyword per line
-\keyword{models}% __ONLY ONE__ keyword per line
+\keyword{univar}
+\keyword{htest}
+\keyword{models}
