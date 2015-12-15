@@ -57,9 +57,11 @@ binom.bayes <- function(x, n,
                     mean = p,
                     lower = lcl,
                     upper = ucl,
-                    sig = sig)
+                    sig = sig,
+                    stringsAsFactors = FALSE)
   if(any(error))
-    res$method <- factor(sprintf("bayes%s", ifelse(ci$error, "*", "")))
+    res$method[!ends] <- sprintf("bayes%s", ifelse(ci$error, "*", ""))
+  res$method <- as.factor(res$method)
   attr(res, "conf.level") <- conf.level
   attr(res, "type") <- type
   res
