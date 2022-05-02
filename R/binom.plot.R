@@ -1,5 +1,5 @@
 panel.binom.plot.levelplot <- function(x, y, z, subscripts, breaks = NULL, ...) {
-  panel.levelplot(x, y, z, subscripts, ...)
+  lattice::panel.levelplot(x, y, z, subscripts, ...)
   if(!is.null(breaks)) {
     breaks <- breaks[subscripts, ]
     for(i in seq(nrow(breaks))) {
@@ -7,13 +7,13 @@ panel.binom.plot.levelplot <- function(x, y, z, subscripts, breaks = NULL, ...) 
       y.i <- breaks$x[i]
       p.x <- x.i[c(1, 2, 2, 1)]
       p.y <- y.i + c(-0.5, -0.5, 0.5, 0.5)
-      lpolygon(p.x, p.y, border = "#cccccc", lwd = 3)
+      lattice::lpolygon(p.x, p.y, border = "#cccccc", lwd = 3)
     }
   }
 }
 
 panel.binom.plot.xyplot <-  function(x, y, subscripts, conf.level, n, breaks, actual, ...) {
-  panel.abline(h = actual, lty = 2, lwd = 2, col = "#880000")
+  lattice::panel.abline(h = actual, lty = 2, lwd = 2, col = "#880000")
   n <- unique(n[subscripts])
   breaks <- unique(sort(unlist(breaks[breaks$n == n, 2:3])))
   nb <- length(breaks)
@@ -23,7 +23,7 @@ panel.binom.plot.xyplot <-  function(x, y, subscripts, conf.level, n, breaks, ac
   y <- c(y, rep(NA, nb))
   x <- x[ord <- order(x)]
   y <- y[ord]
-  panel.xyplot(x, y, type = "l", ...)
+  lattice::panel.xyplot(x, y, type = "l", ...)
   xx <- rep(breaks, each = 3)
   xx[seq(3, nb * 3, 3)] <- NA
   na <- which(is.na(y))
@@ -38,7 +38,7 @@ panel.binom.plot.xyplot <-  function(x, y, subscripts, conf.level, n, breaks, ac
     if(any(ny.plus.1)) yy <- c(yy, NA)
   }
   yy[wh.y %in% na] <- NA
-  panel.xyplot(xx, yy, type = "l", lty = 4, lwd = 2, col = "#888888")
+  lattice::panel.xyplot(xx, yy, type = "l", lty = 4, lwd = 2, col = "#888888")
 }
 
 binom.plot <- function(n,
@@ -48,7 +48,7 @@ binom.plot <- function(n,
                        actual = conf.level,
                        type = c("xyplot", "levelplot"),
                        tol = .Machine$double.eps^0.5, ...) {
-  stopifnot(require(lattice))
+  stopifnot(requireNamespace("lattice"))
   type <- match.arg(type)
   if(length(n) != 1) {
     if(length(n) > 1 && type == "levelplot") {
@@ -72,6 +72,7 @@ binom.plot <- function(n,
       args$panel <- panel.binom.plot.levelplot
     args$breaks <- ci
     if(is.null(args$scales)) args$scales <- list(y = list(at = x, labels = x))
+    fun <- lattice::levelplot
   } else {
     x <- unlist(lapply(lapply(n, ":", 0), rev))
     n <- rep(n, n + 1)
@@ -92,9 +93,10 @@ binom.plot <- function(n,
     }
     args$conf.level <- conf.level
     args$actual <- actual
+    fun <- lattice::xyplot
   }
   args$data <- z
   if(is.null(args$as.table))
-    args$as.table <- TRUE
-  do.call(type, args)
+      args$as.table <- TRUE
+  do.call(fun, args)
 }

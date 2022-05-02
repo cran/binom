@@ -65,26 +65,26 @@ binom.power <- function(p.alt,
 }
 
 tkbinom.power2 <- function() {
-  stopifnot(require(tcltk))
-  stopifnot(require(lattice))
-  trellis.par.set(theme = col.whitebg())
+  stopifnot(requireNamespace("tcltk"))
+  stopifnot(requireNamespace("lattice"))
+  lattice::trellis.par.set(theme = lattice::col.whitebg())
   local({
-    tk.p <- tclVar(0.5)
-    tk.alpha <- tclVar(0.05)
-    tk.n <- tclVar(25)
-    tk.alternative <- tclVar("two.sided")
+    tk.p <- tcltk::tclVar(0.5)
+    tk.alpha <- tcltk::tclVar(0.05)
+    tk.n <- tcltk::tclVar(25)
+    tk.alternative <- tcltk::tclVar("two.sided")
     methods <- c("cloglog", "logit", "probit", "asymp", "exact", "lrt")
-    tk.method <- lapply(methods, tclVar)
+    tk.method <- lapply(methods, tcltk::tclVar)
     col <- c("#800000", "#000080", "#008000", "#e00e00", "#808000", "#0000ff")
     names(col) <- names(tk.method) <- methods
     p.sav <- 0.5 # in case replot.maybe is called too early
     replot <- function(...) {
-      p <- as.numeric(tclObj(tk.p))
-      n <- as.numeric(tclObj(tk.n))
-      alpha <- as.numeric(tclObj(tk.alpha))
-      alternative <- as.character(tclObj(tk.alternative))
+      p <- as.numeric(tcltk::tclObj(tk.p))
+      n <- as.numeric(tcltk::tclObj(tk.n))
+      alpha <- as.numeric(tcltk::tclObj(tk.alpha))
+      alternative <- as.character(tcltk::tclObj(tk.alternative))
       p.alt <- seq(0, 1, 0.01)[-c(1, 101)]
-      p.sav <<- p <- as.numeric(tclObj(tk.p))
+      p.sav <<- p <- as.numeric(tcltk::tclObj(tk.p))
       first <- TRUE
       delta <- p.alt - p
       xlim <- range(delta)
@@ -96,96 +96,96 @@ tkbinom.power2 <- function() {
       box()
       show <- NULL
       for(i in methods) {
-        plot.method <- as.logical(tclObj(tk.method[[i]]))
+        plot.method <- as.logical(tcltk::tclObj(tk.method[[i]]))
         if(!is.na(plot.method) && plot.method) {
           show <- c(show, i)
           y <- binom.power(p.alt, n, p, alpha, 1, alternative, i)
           lines(delta, y, col = col[i], lwd = 3)
         }
       }
-      abline(h = as.numeric(tclObj(tk.alpha)), v = 0)
+      abline(h = as.numeric(tcltk::tclObj(tk.alpha)), v = 0)
       if(!is.null(show)) {
         legend(x = min(delta), y = 1, legend = show, col = col[show], lty = 1, lwd = 3)
       }
     }
     replot.maybe <- function(...) {
-      if(as.numeric(tclObj(tk.p)) != p.sav) replot()
+      if(as.numeric(tcltk::tclObj(tk.p)) != p.sav) replot()
     }
-    base <- tktoplevel()
-    tkwm.title(base, "Binomial Power Curves")
-    spec.frm <- tkframe(base, borderwidth = 2)
-    left.frm <- tkframe(spec.frm)
-    right.frm <- tkframe(spec.frm)
-    bottom.frm <- tkframe(spec.frm)
+    base <- tcltk::tktoplevel()
+    tcltk::tkwm.title(base, "Binomial Power Curves")
+    spec.frm <- tcltk::tkframe(base, borderwidth = 2)
+    left.frm <- tcltk::tkframe(spec.frm)
+    right.frm <- tcltk::tkframe(spec.frm)
+    bottom.frm <- tcltk::tkframe(spec.frm)
     ## Two left frames:
-    frame1 <- tkframe(left.frm, relief = "groove", borderwidth = 2)
-    tkpack(tklabel(frame1, text = "Alternative"))
+    frame1 <- tcltk::tkframe(left.frm, relief = "groove", borderwidth = 2)
+    tcltk::tkpack(tcltk::tklabel(frame1, text = "Alternative"))
     for(i in c("two.sided", "greater", "less")) {
-      tmp <- tkradiobutton(frame1, command = replot, text = i,
+      tmp <- tcltk::tkradiobutton(frame1, command = replot, text = i,
                            value = i, variable = tk.alternative)
-      tkpack(tmp, anchor = "w")
+      tcltk::tkpack(tmp, anchor = "w")
     }
-    frame2 <- tkframe(left.frm, relief = "groove", borderwidth = 2)
-    tkpack(tklabel(frame2, text = "Method"))
+    frame2 <- tcltk::tkframe(left.frm, relief = "groove", borderwidth = 2)
+    tcltk::tkpack(tcltk::tklabel(frame2, text = "Method"))
     for(i in c("cloglog", "logit", "probit", "asymp", "exact", "lrt") ) {
-      tmp <- tkcheckbutton(frame2, text = i, command = replot,
+      tmp <- tcltk::tkcheckbutton(frame2, text = i, command = replot,
                            variable = tk.method[[i]])
-      tkpack(tmp, anchor = "w")
+      tcltk::tkpack(tmp, anchor = "w")
     }
     ## Two right frames:
-    frame3 <- tkframe(right.frm, relief = "groove", borderwidth = 2)
-    tkpack(tklabel(frame3, text = "Sample size"))
+    frame3 <- tcltk::tkframe(right.frm, relief = "groove", borderwidth = 2)
+    tcltk::tkpack(tcltk::tklabel(frame3, text = "Sample size"))
     for(i in c(25, 50, 75, 100, 125)) {
-      tmp <- tkradiobutton(frame3, command = replot, text = i,
+      tmp <- tcltk::tkradiobutton(frame3, command = replot, text = i,
                            value = i, variable = tk.n)
-      tkpack(tmp, anchor = "w")
+      tcltk::tkpack(tmp, anchor = "w")
     }
-    frame4 <- tkframe(right.frm, relief = "groove", borderwidth = 2)
-    tkpack(tklabel(frame4, text = "Prob(Success)"))
-    tkpack(tkscale(frame4, command = replot.maybe,
+    frame4 <- tcltk::tkframe(right.frm, relief = "groove", borderwidth = 2)
+    tcltk::tkpack(tcltk::tklabel(frame4, text = "Prob(Success)"))
+    tcltk::tkpack(tcltk::tkscale(frame4, command = replot.maybe,
                    from = 0.001, to = 0.999,
                    showvalue = TRUE, variable = tk.p,
                    resolution = 0.001, orient = "horiz"))
     ## build layout
-    tkpack(frame1, frame2, fill = "x")
-    tkpack(frame3, frame4, fill = "x")
-    tkpack(left.frm, right.frm, side = "left", anchor = "n")
+    tcltk::tkpack(frame1, frame2, fill = "x")
+    tcltk::tkpack(frame3, frame4, fill = "x")
+    tcltk::tkpack(left.frm, right.frm, side = "left", anchor = "n")
     ## bottom frame:
-    q.but <- tkbutton(base, text = "Quit", command = function() tkdestroy(base))
-    tkpack(spec.frm, q.but)
+    q.but <- tcltk::tkbutton(base, text = "Quit", command = function() tcltk::tkdestroy(base))
+    tcltk::tkpack(spec.frm, q.but)
     replot()
   })
   invisible()
 }
 
 tkbinom.power <- function() {
-  stopifnot(require(tcltk))
-  stopifnot(require(lattice))
-  trellis.par.set(theme = col.whitebg())
+  stopifnot(requireNamespace("tcltk"))
+  stopifnot(requireNamespace("lattice"))
+  lattice::trellis.par.set(theme = lattice::col.whitebg())
   local({
-    tk.p <- tclVar(0.5)
-    tk.alpha <- tclVar(0.05)
-    tk.n <- tclVar(25)
-    tk.alternative <- tclVar("two.sided")
+    tk.p <- tcltk::tclVar(0.5)
+    tk.alpha <- tcltk::tclVar(0.05)
+    tk.n <- tcltk::tclVar(25)
+    tk.alternative <- tcltk::tclVar("two.sided")
     methods <- c("cloglog", "logit", "probit", "asymp", "exact", "lrt")
-    tk.method <- lapply(methods, tclVar)
-    col <- trellis.par.get("superpose.line")$col[1:6]
+    tk.method <- lapply(methods, tcltk::tclVar)
+    col <- lattice::trellis.par.get("superpose.line")$col[1:6]
     names(col) <- names(tk.method) <- methods
     p.sav <- 0.5 # in case replot.maybe is called too early
     replot <- function(...) {
-      p <- as.numeric(tclObj(tk.p))
-      n <- as.numeric(tclObj(tk.n))
-      alpha <- as.numeric(tclObj(tk.alpha))
-      alternative <- as.character(tclObj(tk.alternative))
+      p <- as.numeric(tcltk::tclObj(tk.p))
+      n <- as.numeric(tcltk::tclObj(tk.n))
+      alpha <- as.numeric(tcltk::tclObj(tk.alpha))
+      alternative <- as.character(tcltk::tclObj(tk.alternative))
       p.alt <- seq(0, 1, 0.01)[-c(1, 101)]
-      p.sav <<- p <- as.numeric(tclObj(tk.p))
+      p.sav <<- p <- as.numeric(tcltk::tclObj(tk.p))
       first <- TRUE
       delta <- p.alt - p
       xlim <- range(delta)
       ylim <- c(0, 1)
       show <- x <- y <- key <- NULL
       for(i in methods) {
-        plot.method <- as.logical(tclObj(tk.method[[i]]))
+        plot.method <- as.logical(tcltk::tclObj(tk.method[[i]]))
         if(!is.na(plot.method) && plot.method) {
           y <- c(y, binom.power(p.alt, n, p, alpha, 1, alternative, i))
           show <- c(show, rep(i, length(p.alt)))
@@ -197,14 +197,14 @@ tkbinom.power <- function() {
         key <- list(space = "right", text = list(levels(show)),
                     lines = list(col = col[levels(show)], lty = 1, lwd = 3))
       }
-      xy <- xyplot(ylim ~ xlim, panel = function(x, y, .x, .y, .g, col, ...) {
+      xy <- lattice::xyplot(ylim ~ xlim, panel = function(x, y, .x, .y, .g, col, ...) {
                      if(!is.null(.y)) {
                        for(g in levels(.g)) {
                          s <- .g == g
-                         llines(.x[s], .y[s], col = col[g], ...)
+                         lattice::llines(.x[s], .y[s], col = col[g], ...)
                        }
                      }
-                     panel.abline(h = as.numeric(tclObj(tk.alpha)), v = 0)
+                     lattice::panel.abline(h = as.numeric(tcltk::tclObj(tk.alpha)), v = 0)
                    },
                    .x = x, .y = y, .g = show,
                    key = key, type = "l", lwd = 3, col = col,
@@ -212,50 +212,50 @@ tkbinom.power <- function() {
       print(xy)
     }
     replot.maybe <- function(...) {
-      if(as.numeric(tclObj(tk.p)) != p.sav) replot()
+      if(as.numeric(tcltk::tclObj(tk.p)) != p.sav) replot()
     }
-    base <- tktoplevel()
-    tkwm.title(base, "Binomial Power Curves")
-    spec.frm <- tkframe(base, borderwidth = 2)
-    left.frm <- tkframe(spec.frm)
-    right.frm <- tkframe(spec.frm)
-    bottom.frm <- tkframe(spec.frm)
+    base <- tcltk::tktoplevel()
+    tcltk::tkwm.title(base, "Binomial Power Curves")
+    spec.frm <- tcltk::tkframe(base, borderwidth = 2)
+    left.frm <- tcltk::tkframe(spec.frm)
+    right.frm <- tcltk::tkframe(spec.frm)
+    bottom.frm <- tcltk::tkframe(spec.frm)
     ## Two left frames:
-    frame1 <- tkframe(left.frm, relief = "groove", borderwidth = 2)
-    tkpack(tklabel(frame1, text = "Alternative"))
+    frame1 <- tcltk::tkframe(left.frm, relief = "groove", borderwidth = 2)
+    tcltk::tkpack(tcltk::tklabel(frame1, text = "Alternative"))
     for(i in c("two.sided", "greater", "less")) {
-      tmp <- tkradiobutton(frame1, command = replot, text = i,
+      tmp <- tcltk::tkradiobutton(frame1, command = replot, text = i,
                            value = i, variable = tk.alternative)
-      tkpack(tmp, anchor = "w")
+      tcltk::tkpack(tmp, anchor = "w")
     }
-    frame2 <- tkframe(left.frm, relief = "groove", borderwidth = 2)
-    tkpack(tklabel(frame2, text = "Method"))
+    frame2 <- tcltk::tkframe(left.frm, relief = "groove", borderwidth = 2)
+    tcltk::tkpack(tcltk::tklabel(frame2, text = "Method"))
     for(i in c("cloglog", "logit", "probit", "asymp", "exact", "lrt") ) {
-      tmp <- tkcheckbutton(frame2, text = i, command = replot,
+      tmp <- tcltk::tkcheckbutton(frame2, text = i, command = replot,
                            variable = tk.method[[i]])
-      tkpack(tmp, anchor = "w")
+      tcltk::tkpack(tmp, anchor = "w")
     }
     ## Two right frames:
-    frame3 <- tkframe(right.frm, relief = "groove", borderwidth = 2)
-    tkpack(tklabel(frame3, text = "Sample size"))
+    frame3 <- tcltk::tkframe(right.frm, relief = "groove", borderwidth = 2)
+    tcltk::tkpack(tcltk::tklabel(frame3, text = "Sample size"))
     for(i in c(25, 50, 75, 100, 125)) {
-      tmp <- tkradiobutton(frame3, command = replot, text = i,
+      tmp <- tcltk::tkradiobutton(frame3, command = replot, text = i,
                            value = i, variable = tk.n)
-      tkpack(tmp, anchor = "w")
+      tcltk::tkpack(tmp, anchor = "w")
     }
-    frame4 <- tkframe(right.frm, relief = "groove", borderwidth = 2)
-    tkpack(tklabel(frame4, text = "Prob(Success)"))
-    tkpack(tkscale(frame4, command = replot.maybe,
+    frame4 <- tcltk::tkframe(right.frm, relief = "groove", borderwidth = 2)
+    tcltk::tkpack(tcltk::tklabel(frame4, text = "Prob(Success)"))
+    tcltk::tkpack(tcltk::tkscale(frame4, command = replot.maybe,
                    from = 0.001, to = 0.999,
                    showvalue = TRUE, variable = tk.p,
                    resolution = 0.001, orient = "horiz"))
     ## build layout
-    tkpack(frame1, frame2, fill = "x")
-    tkpack(frame3, frame4, fill = "x")
-    tkpack(left.frm, right.frm, side = "left", anchor = "n")
+    tcltk::tkpack(frame1, frame2, fill = "x")
+    tcltk::tkpack(frame3, frame4, fill = "x")
+    tcltk::tkpack(left.frm, right.frm, side = "left", anchor = "n")
     ## bottom frame:
-    q.but <- tkbutton(base, text = "Quit", command = function() tkdestroy(base))
-    tkpack(spec.frm, q.but)
+    q.but <- tcltk::tkbutton(base, text = "Quit", command = function() tcltk::tkdestroy(base))
+    tcltk::tkpack(spec.frm, q.but)
     replot()
   })
   invisible()

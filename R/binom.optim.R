@@ -60,12 +60,12 @@ integrate.poly <- function(x, n, lower = 0, upper = 1, conf.level = 0.95, method
   bounds <- sort(c(lower[1], upper[1]))
   x <- sort(x)
   if(method == "polynom") {
-    require(polynom)
-    integrand <- polynomial(0)
-    p1 <- polynomial(c(0, 1))
-    p2 <- polynomial(c(1, -1))
+    requireNamespace("polynom")
+    integrand <- polynom::polynomial(0)
+    p1 <- polynom::polynomial(c(0, 1))
+    p2 <- polynom::polynomial(c(1, -1))
     for(k in x) integrand <- integrand + p1^k * p2^(n - k) * choose(n, k)
-    diff(predict(integral((integrand - conf.level)^2), bounds))
+    diff(predict(polynom::integral((integrand - conf.level)^2), bounds))
   } else {
     pbeta2 <- function(p, a, b, r) {
       pr <- exp(r + sapply(p, pbeta, shape1 = a, shape2 = b, log.p = TRUE))

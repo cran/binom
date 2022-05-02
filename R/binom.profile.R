@@ -4,7 +4,7 @@ binom.profile <- function(x, n,
                           del = zmax / 5,
                           bayes = TRUE,
                           plot = FALSE, ...) {
-  do.plot <- (plot && require(lattice))
+  do.plot <- (plot && requireNamespace("lattice"))
   xn <- cbind(x = x, n = n)
   ok <- !is.na(xn[, 1]) & !is.na(xn[, 2])
   x <- xn[ok, "x"]
@@ -87,28 +87,28 @@ binom.profile <- function(x, n,
     attr(res, "profile") <- prof <- do.call("rbind", prof)
     xn <- paste("x = ", prof$x, "; n = ", prof$n, sep = "")
     xn <- ordered(xn, unique(xn))
-    xy <- xyplot(z ~ mu | xn, prof,
+    xy <- lattice::xyplot(z ~ mu | xn, prof,
                  panel = function(x, y, subscripts, lcl, ucl, ...) {
                    s <- spline(x, y)
-                   panel.xyplot(s$x, s$y, type = "l", col = "#4466cc", lwd = 2)
-                   panel.xyplot(x, y, pch = 16, cex = 1, col = "#880000")
+                   lattice::panel.xyplot(s$x, s$y, type = "l", col = "#4466cc", lwd = 2)
+                   lattice::panel.xyplot(x, y, pch = 16, cex = 1, col = "#880000")
                    lcl <- unique(lcl[subscripts])
                    ucl <- unique(ucl[subscripts])
                    adj.x <- min(x)
                    adj.y <- diff(range(y)) * 0.04
                    if(lcl > adj.x) {
                      q <- qnorm(alpha/2)
-                     llines(c(0, lcl), c(q, q), lty = 2)
-                     llines(c(lcl, lcl), c(-5, q), lty = 2)
+                     lattice::llines(c(0, lcl), c(q, q), lty = 2)
+                     lattice::llines(c(lcl, lcl), c(-5, q), lty = 2)
                      lab <- sprintf("LCL = %3.2f", lcl)
-                     ltext(adj.x, q + adj.y, lab, adj = 0, col = "black")
+                     lattice::ltext(adj.x, q + adj.y, lab, adj = 0, col = "black")
                    }
                    if(ucl < max(x)) {
                      q <- qnorm(1 - alpha/2)
-                     llines(c(0, ucl), c(q, q), lty = 2)
-                     llines(c(ucl, ucl), c(-5, q), lty = 2)
+                     lattice::llines(c(0, ucl), c(q, q), lty = 2)
+                     lattice::llines(c(ucl, ucl), c(-5, q), lty = 2)
                      lab <- sprintf("UCL = %3.2f", ucl)
-                     ltext(adj.x, q + adj.y, lab, adj = 0, col = "black")
+                     lattice::ltext(adj.x, q + adj.y, lab, adj = 0, col = "black")
                    }
                  },
                  lcl = prof$lcl, ucl = prof$ucl,

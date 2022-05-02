@@ -105,23 +105,23 @@ binom.bayes.densityplot <- function(bayes,
                                     fill.lower = "steelblue",
                                     fill.upper = fill.lower,
                                     alpha = 0.8, ...) {
-  stopifnot(require(ggplot2))
+  stopifnot(requireNamespace("ggplot2"))
   x <- seq(0, 1, length.out = npoints)
   datalist <- lapply(1:nrow(bayes), build.density.data, x = x, bayes = bayes)
   data.lower <- do.call(rbind, lapply(datalist, "[[", "lower"))
   data.upper <- do.call(rbind, lapply(datalist, "[[", "upper"))
   data.central <- do.call(rbind, lapply(datalist, "[[", "central"))
-  gg <- ggplot(data.central, aes_string(x = "xx", y = "yy"))
-  gg <- gg + geom_polygon(fill = fill.central, alpha = alpha)
+  gg <- ggplot2::ggplot(data.central, ggplot2::aes_string(x = "xx", y = "yy"))
+  gg <- gg + ggplot2::geom_polygon(fill = fill.central, alpha = alpha)
   if (nrow(data.lower) > 0) {
-    gg <- gg + geom_polygon(data = data.lower, fill = fill.lower, alpha = alpha)
+    gg <- gg + ggplot2::geom_polygon(data = data.lower, fill = fill.lower, alpha = alpha)
   }
   if (nrow(data.upper) > 0) {
-    gg <- gg + geom_polygon(data = data.upper, fill = fill.upper, alpha = alpha)
+    gg <- gg + ggplot2::geom_polygon(data = data.upper, fill = fill.upper, alpha = alpha)
   }
-  gg <- gg + facet_wrap(~ label)
-  gg <- gg + xlim(c(0, 1)) + xlab(NULL)
-  gg <- gg + ylim(c(0, max(data.central$y))) + ylab("Beta Density")
-  gg <- gg + theme_bw()
+  gg <- gg + ggplot2::facet_wrap(~ label)
+  gg <- gg + ggplot2::xlim(c(0, 1)) + ggplot2::xlab(NULL)
+  gg <- gg + ggplot2::ylim(c(0, max(data.central$y))) + ggplot2::ylab("Beta Density")
+  gg <- gg + ggplot2::theme_bw()
   gg
 }

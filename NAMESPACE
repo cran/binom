@@ -23,3 +23,10 @@ export(binom.asymp,
        binom.plot)
 
 importFrom(grid, pushViewport)
+
+importFrom("grDevices", "heat.colors")
+importFrom("graphics", "abline", "axis", "box", "legend", "lines")
+importFrom("stats", "aggregate", "approx", "binomial", "dbeta",
+           "dbinom", "dnorm", "optim", "pbeta", "pnorm", "predict",
+           "qbeta", "qnorm", "rbinom", "reorder", "spline", "uniroot")
+importFrom("utils", "find")

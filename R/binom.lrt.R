@@ -1,5 +1,5 @@
 binom.lrt <- function(x, n, conf.level = 0.95, bayes = FALSE, conf.adj = FALSE, plot = FALSE, ...) {
-  do.plot <- ((is.logical(plot) && plot) || is.list(plot)) && require(lattice)
+  do.plot <- ((is.logical(plot) && plot) || is.list(plot)) && requireNamespace("lattice")
   xn <- cbind(x = x, n = n)
   ok <- !is.na(xn[, 1]) & !is.na(xn[, 2])
   x <- xn[ok, "x"]
@@ -109,7 +109,7 @@ binom.lrt <- function(x, n, conf.level = 0.95, bayes = FALSE, conf.adj = FALSE, 
       plot.args$par.strip.text$cex <- 1.2
     }
     if(is.null(plot.args$as.table)) plot.args$as.table <- TRUE
-    print(do.call("xyplot", plot.args))
+    print(do.call(lattice::xyplot, plot.args))
   }
   attr(res, "conf.level") <- conf.level
   cbind(method = "lrt", res)
@@ -117,35 +117,35 @@ binom.lrt <- function(x, n, conf.level = 0.95, bayes = FALSE, conf.adj = FALSE, 
 
 panel.binom.lrt <- function(x, y, subscripts, lower, upper, mean, alpha, ...) {
   s <- spline(x, y)
-  panel.xyplot(s$x, s$y, type = "l", lwd = 2, col = "darkblue")
+  lattice::panel.xyplot(s$x, s$y, type = "l", lwd = 2, col = "darkblue")
   lower <- unique(lower[subscripts])
   upper <- unique(upper[subscripts])
   mean <- unique(mean[subscripts])
-  limits <- current.panel.limits()
+  limits <- lattice::current.panel.limits()
   xlim <- limits$xlim
   ylim <- limits$ylim
   adj.x <- diff(xlim) * 0.04
   adj.y <- diff(ylim) * 0.04
-  llines(c(xlim[1], mean), c(0, 0), lty = 2, col = "darkgray", lwd = 2)
-  llines(c(mean, mean), c(ylim[1], 0), lty = 2, col = "darkgray", lwd = 2)
+  lattice::llines(c(xlim[1], mean), c(0, 0), lty = 2, col = "darkgray", lwd = 2)
+  lattice::llines(c(mean, mean), c(ylim[1], 0), lty = 2, col = "darkgray", lwd = 2)
   lab <- sprintf("p = %0.4f", mean)
-  ltext(xlim[1] + adj.x, adj.y, lab, adj = 0, col = "black")
-  lpoints(mean, 0, col = "darkred", pch = 16, cex = 1.2)
+  lattice::ltext(xlim[1] + adj.x, adj.y, lab, adj = 0, col = "black")
+  lattice::lpoints(mean, 0, col = "darkred", pch = 16, cex = 1.2)
   if(lower > xlim[1] && lower < mean) {
     q <- qnorm(alpha/2)
-    llines(c(xlim[1], lower), c(q, q), lty = 2, col = "darkgray", lwd = 2)
-    llines(c(lower, lower), c(ylim[1], q), lty = 2, col = "darkgray", lwd = 2)
+    lattice::llines(c(xlim[1], lower), c(q, q), lty = 2, col = "darkgray", lwd = 2)
+    lattice::llines(c(lower, lower), c(ylim[1], q), lty = 2, col = "darkgray", lwd = 2)
     ##lab <- substitute(hat(p)[L] == phat, list(phat = sprintf("%0.4f", lower)))
     lab <- sprintf("LCL = %0.4f", lower)
-    ltext(xlim[1] + adj.x, q + adj.y, lab, adj = 0, col = "black")
-    lpoints(lower, q, col = "darkred", pch = 16, cex = 1.2)
+    lattice::ltext(xlim[1] + adj.x, q + adj.y, lab, adj = 0, col = "black")
+    lattice::lpoints(lower, q, col = "darkred", pch = 16, cex = 1.2)
   }
   if(upper < xlim[2] && mean < upper) {
     q <- qnorm(1 - alpha/2)
-    llines(c(xlim[1], upper), c(q, q), lty = 2, col = "darkgray", lwd = 2)
-    llines(c(upper, upper), c(ylim[1], q), lty = 2, col = "darkgray", lwd = 2)
+    lattice::llines(c(xlim[1], upper), c(q, q), lty = 2, col = "darkgray", lwd = 2)
+    lattice::llines(c(upper, upper), c(ylim[1], q), lty = 2, col = "darkgray", lwd = 2)
     lab <- sprintf("UCL = %0.4f", upper)
-    ltext(xlim[1] + adj.x, q + adj.y, lab, adj = 0, col = "black")
-    lpoints(upper, q, col = "darkred", pch = 16, cex = 1.2)
+    lattice::ltext(xlim[1] + adj.x, q + adj.y, lab, adj = 0, col = "black")
+    lattice::lpoints(upper, q, col = "darkred", pch = 16, cex = 1.2)
   }
 }
