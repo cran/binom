@@ -24,7 +24,7 @@ binom.confint(x, n, conf.level = 0.95, methods = "all", ...)
 \details{
 Nine methods are allowed for constructing the confidence interval(s):
 
-\itemize{
+\describe{
 \item{\code{exact}}{ - Pearson-Klopper method. See also
   \code{\link{binom.test}}.}
 \item{\code{asymptotic}}{ - the text-book definition for confidence

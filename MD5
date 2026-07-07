@@ -1,7 +1,8 @@
-f21bf8c5904c65b4bd7d7c06eb07374c *DESCRIPTION
+fd93004b6f5463454a930256f148c828 *DESCRIPTION
 953d3668dc04c1e22a372e75bceee016 *NAMESPACE
-9bb5264dd16ee46683cea84e8dc5834d *R/binom.bayes.R
-9ece8eed12b516fd6703362e3fb497aa *R/binom.confint.R
+c6fe30b167ff12349a48fd2729e905bd *NEWS.md
+a953e0984576643884827239d596e95d *R/binom.bayes.R
+2e05e407b7551eaa300305ef6d9b9e4e *R/binom.confint.R
 5bf4a1710c3ccb2a6e4142476a8f8ff8 *R/binom.coverage.R
 e6b4d798852083d71d9df59d15efd8e0 *R/binom.internal.R
 7bab166fd8a52e1f977a8a3ad3c57e91 *R/binom.length.R
@@ -18,7 +19,7 @@ ad361405a44d6350da53952b2422565a *R/cloglog.sample.size.R
 cc62168cb5495920236ae871f60a2f77 *man/binom-internal.Rd
 7315eb0940397a69b434bb7f8fbc45c9 *man/binom.bayes.Rd
 b470f8a5cb60bb8e2b749c6585e55e17 *man/binom.cloglog.Rd
-b52750884be6137d36641fd20164fec3 *man/binom.confint.Rd
+45ba434fe28338d309f8c59de3466131 *man/binom.confint.Rd
 cfbec17ff7b3cfb5fc4e00818f127b7b *man/binom.coverage.Rd
 102b68a364c224532464b6fae267ad36 *man/binom.length.Rd
 49793e99b8343ffad6483ad528c6005a *man/binom.logit.Rd

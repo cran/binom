@@ -138,7 +138,7 @@ binom.confint <- function(x, n, conf.level = 0.95, methods = "all", ...) {
     res <- if(is.null(res)) res.lrt else rbind(res, res.lrt)
   }
   if(any(method == "prop.test") || all.methods) {
-    ci <- lapply(seq_along(x), function(i) stats::prop.test(x[i], n[i])$conf.int)
+    ci <- lapply(seq_along(x), function(i) stats::prop.test(x[i], n[i], conf.level = conf.level)$conf.int)
     lcl <- sapply(ci, "[", 1)
     ucl <- sapply(ci, "[", 2)
     res.prop.test <- data.frame(method = rep("prop.test", NROW(x)),

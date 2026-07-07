@@ -65,12 +65,12 @@ binom.bayes <- function(x, n,
   res
 }
 
-rbind.zero <- function(data, which.x = c("max", "min", "both"), row.only = FALSE) {
+rbind_zero <- function(data, which.x = c("max", "min", "both"), row.only = FALSE) {
   if (nrow(data) == 0) return(data)
   which.x <- match.arg(which.x)
   if (which.x == "both") {
-    data.max <- rbind.zero(data, which.x = "max", row.only = TRUE)
-    data.min <- rbind.zero(data, which.x = "min", row.only = TRUE)
+    data.max <- rbind_zero(data, which.x = "max", row.only = TRUE)
+    data.min <- rbind_zero(data, which.x = "min", row.only = TRUE)
     data.x <- rbind(data.max, data.min)
   } else {
     which.fn <- if (which.x == "max") which.max else which.min
@@ -93,9 +93,9 @@ build.density.data <- function(i, x, bayes) {
   data.lower <- data[data$xx < data$lower, ]
   data.upper <- data[data$xx > data$upper, ]
   data.central <- data[data$xx >= data$lower & data$xx <= data$upper, ]
-  data.lower <- rbind.zero(data.lower, which.x = "max")
-  data.upper <- rbind.zero(data.upper, which.x = "min")
-  data.central <- rbind.zero(data.central, which.x = "both")
+  data.lower <- rbind_zero(data.lower, which.x = "max")
+  data.upper <- rbind_zero(data.upper, which.x = "min")
+  data.central <- rbind_zero(data.central, which.x = "both")
   list(lower = data.lower, upper = data.upper, central = data.central)
 }
 
